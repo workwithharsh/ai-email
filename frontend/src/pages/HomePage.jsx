@@ -1,10 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { FeedbackForm } from "../components/Components.js";
+import FeedbackForm from "../components/FeedbackForm";
 
-const HomePage = () => {
+function HomePage() {
   const navigate = useNavigate();
 
-  const handleFeedbackSubmit = async (feedback) => {
+  const handleFeedbackSubmit = async (recipient, subject, feedback) => {
+    if (!recipient || !subject || !feedback.trim()) {
+      alert("All fields are required!");
+      return;
+    }
+
     try {
       const response = await fetch("/api/v1/gemini/generate", {
         method: "POST",
@@ -13,10 +18,13 @@ const HomePage = () => {
       });
 
       const data = await response.json();
-      console.log("AI Response:", data);
 
       if (data.emailContent) {
-        navigate("/response", { state: { emailData: data } });
+        navigate("/response", {
+          state: {
+            emailData: { recipient, subject, emailContent: data.emailContent },
+          },
+        });
       }
     } catch (error) {
       console.error("Error generating email:", error);
@@ -28,6 +36,6 @@ const HomePage = () => {
       <FeedbackForm onSubmit={handleFeedbackSubmit} />
     </div>
   );
-};
+}
 
 export default HomePage;

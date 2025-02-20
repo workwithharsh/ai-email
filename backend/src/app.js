@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 
 // Import Routes
+import emailRoutes from "./routes/email.route.js";
 import geminiRoutes from "./routes/gemini.route.js";
 
 dotenv.config();
@@ -19,7 +20,8 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "16kb" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Health Check Route
@@ -29,5 +31,6 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/v1/gemini", geminiRoutes);
+app.use("/api/v1/email", emailRoutes);
 
 export { app };
