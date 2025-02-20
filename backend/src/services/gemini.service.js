@@ -8,7 +8,7 @@ export const getGeminiEmail = async (feedback) => {
 
     // Email prompt
     const prompt = `Write a professional email based on this feedback: "${feedback}". 
-      Ensure it's well-structured, includes a subject, and ends with "Best regards, Harsh Prakash".`;
+      Ensure it's well-structured, don't include includes a subject, and ends with "Best regards, Harsh Prakash".`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response.text();
