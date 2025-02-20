@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 dotenv.config();
 
-// Configure Nodemailer Transporter
+// Nodemailer Transporter Configuration
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -14,22 +14,23 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to send an email
+// Send Email Controller
 export const sendEmail = async (req, res) => {
   try {
     const { to, subject, text } = req.body;
 
-    // Validate body
     if (!to || !subject || !text) {
       return res
         .status(400)
-        .json({ error: "All fields (to, subject, text) are required" });
+        .json({ error: "Recipient, subject, and message are required." });
     }
 
-    // Send email
+    // Convert into an array
+    const recipients = to.split(",").map((email) => email.trim());
+
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to,
+      to: recipients,
       subject,
       text,
     });
